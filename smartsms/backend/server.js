@@ -10,7 +10,15 @@ app.use(express.json());
 
 // Root Route
 app.get('/', (req, res) => {
-  res.send('SmartSMS API Running 🚀');
+  res.send('SmartSMS Backend Running ✅');
+});
+
+// Test Route
+app.get('/api/test', (req, res) => {
+  res.json({
+    success: true,
+    message: 'API working successfully ✅'
+  });
 });
 
 // Routes
@@ -20,7 +28,7 @@ app.use('/api/contacts', require('./routes/contacts'));
 app.use('/api/dashboard', require('./routes/dashboard'));
 
 // Port
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 8080;
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI)
