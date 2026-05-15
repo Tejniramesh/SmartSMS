@@ -5,48 +5,43 @@ require('dotenv').config();
 
 const app = express();
 
+// Middleware
 app.use(cors());
 app.use(express.json());
 
-// Root Route
+// TEST ROUTE
 app.get('/', (req, res) => {
-  res.send('SmartSMS Backend Running ✅');
-});
-
-// Test Route
-app.get('/api/test', (req, res) => {
-  res.json({
-    success: true,
-    message: 'API working successfully ✅'
+  res.status(200).json({
+    message: 'SmartSMS Backend Running Successfully 🚀'
   });
 });
 
 // Routes
-app.use('/api/auth', require('./routes/auth'));
-app.use('/api/sms', require('./routes/sms'));
-app.use('/api/contacts', require('./routes/contacts'));
-app.use('/api/dashboard', require('./routes/dashboard'));
+try {
+  app.use('/api/auth', require('./routes/auth'));
+  app.use('/api/sms', require('./routes/sms'));
+  app.use('/api/contacts', require('./routes/contacts'));
+  app.use('/api/dashboard', require('./routes/dashboard'));
+} catch (err) {
+  console.error('Route loading error:', err);
+}
 
-// Port
+// PORT
 const PORT = process.env.PORT || 8080;
 
-// Connect to MongoDB
+// MongoDB Connection
 mongoose.connect(process.env.MONGO_URI)
-  .then(() => {
-    console.log('✅ MongoDB connected');
+.then(() => {
+  console.log('✅ MongoDB connected');
 
-    app.listen(PORT, () => {
-      console.log(`🚀 Server running on port ${PORT}`);
-    });
-  })
-  .catch(err => {
-    console.error('MongoDB connection error:', err);
-
-    console.log('⚠️ Starting server without MongoDB');
-
-    app.listen(PORT, () => {
-      console.log(`🚀 Server running on port ${PORT}`);
-    });
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`🚀 Server running on port ${PORT}`);
   });
+})
+.catch((err) => {
+  console.error('MongoDB connection error:', err);
 
-module.exports = app;
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`🚀 Server running on port ${PORT}`);
+  });
+});
